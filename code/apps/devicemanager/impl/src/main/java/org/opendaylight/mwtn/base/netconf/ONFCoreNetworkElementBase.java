@@ -4,7 +4,6 @@
 package org.opendaylight.mwtn.base.netconf;
 
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
-import org.opendaylight.yang.gen.v1.uri.onf.microwavemodel.networkelement.currentproblemlist.rev161120.NetworkElementCurrentProblems;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +20,7 @@ public abstract class ONFCoreNetworkElementBase implements ONFCoreNetworkElement
     protected final String mountPointNodeName;
     protected final DataBroker netconfNodeDataBroker;
     protected final Capabilities capabilities;
-    protected final boolean isNetworkElementCurrentProblemsSupporting10;
+//    protected final boolean isNetworkElementCurrentProblemsSupporting10;
 
     protected ONFCoreNetworkElementBase(String mountPointNodeName,
             DataBroker netconfNodeDataBroker,
@@ -31,7 +30,7 @@ public abstract class ONFCoreNetworkElementBase implements ONFCoreNetworkElement
         this.netconfNodeDataBroker = netconfNodeDataBroker;
         this.capabilities = capabilities;
 
-        this.isNetworkElementCurrentProblemsSupporting10 = capabilities.isSupportingNamespace(NetworkElementCurrentProblems.QNAME);
+//        this.isNetworkElementCurrentProblemsSupporting10 = capabilities.isSupportingNamespace(NetworkElementCurrentProblems.QNAME);
 
     }
 
@@ -45,7 +44,7 @@ public abstract class ONFCoreNetworkElementBase implements ONFCoreNetworkElement
      */
 
     @Override
-	public void initSynchronizationExtension() {
+    public void initSynchronizationExtension() {
     }
 
 

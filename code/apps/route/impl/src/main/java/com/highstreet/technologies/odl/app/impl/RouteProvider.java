@@ -1,4 +1,5 @@
 /*
+ece
  * Copyright © 2017 ZTE and others.  All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -53,7 +54,8 @@ public class RouteProvider
     public void close()
     {
         LOG.info("RouteProvider Closed");
-        if (service != null)
+        if (service != null) {
             service.close();
+        }
     }
 }

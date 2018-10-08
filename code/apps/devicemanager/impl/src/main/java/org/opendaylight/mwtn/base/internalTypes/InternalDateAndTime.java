@@ -4,6 +4,7 @@
 package org.opendaylight.mwtn.base.internalTypes;
 
 import org.opendaylight.mwtn.base.netconf.NetconfTimeStamp;
+import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.core.model.rev170320.DateAndTime;
 
 /**
  * Converts time stamps into internal format according to ONF1.2 and ISO 8601.
@@ -21,7 +22,7 @@ public class InternalDateAndTime {
      * @param time in ONF1.2 yang format
      * @return  InternalDateAndTime
      */
-    public static InternalDateAndTime valueOf(org.opendaylight.yang.gen.v1.uri.onf.coremodel.corefoundationmodule.typedefinitions.rev160701.DateAndTime time) {
+    public static InternalDateAndTime valueOf(DateAndTime time) {
         return new InternalDateAndTime(time);
     }
 
@@ -50,7 +51,7 @@ public class InternalDateAndTime {
      * Convert ONF 1.0 DateAndTime to String
      * @param time as input
      */
-    private InternalDateAndTime(org.opendaylight.yang.gen.v1.uri.onf.coremodel.corefoundationmodule.typedefinitions.rev160701.DateAndTime time) {
+    private InternalDateAndTime(DateAndTime time) {
         internalDateAndTime = NetconfTimeStamp.getTimeStampFromNetconf(time.getValue());
     }
 
