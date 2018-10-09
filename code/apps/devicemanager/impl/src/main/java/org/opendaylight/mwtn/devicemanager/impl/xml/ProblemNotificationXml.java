@@ -64,7 +64,6 @@ public class ProblemNotificationXml extends MwtNotificationBase implements GetEv
 
     /**
      * Create a specific ES id for the current log.
-     * @param fault is the input.
      * @return a string with the generated ES Id
      */
     @JsonIgnore
@@ -88,7 +87,6 @@ public class ProblemNotificationXml extends MwtNotificationBase implements GetEv
         return strBuf.toString();
     }
 
-
     @Override
     public String toString() {
         return "ProblemNotificationXml [problem=" + problem + ", severity=" + severity + ", toString()="
@@ -102,8 +100,8 @@ public class ProblemNotificationXml extends MwtNotificationBase implements GetEv
 
     @JsonIgnore
     public String getTimeStampOffset(int off) {
-    	Instant instant=Instant.parse(this.getTimeStamp());
-    	return instant.truncatedTo(ChronoUnit.SECONDS).plusSeconds(off*60).toString();
+        Instant instant=Instant.parse(this.getTimeStamp());
+        return instant.truncatedTo(ChronoUnit.SECONDS).plusSeconds(off*60).toString();
 }
 
 }

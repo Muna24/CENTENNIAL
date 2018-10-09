@@ -8,6 +8,7 @@
 
 package org.opendaylight.mwtn.base.netconf;
 
+import com.google.common.base.Optional;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -15,10 +16,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
 import org.opendaylight.controller.md.sal.binding.api.MountPoint;
 import org.opendaylight.controller.md.sal.binding.api.NotificationService;
@@ -28,13 +27,11 @@ import org.opendaylight.mwtn.base.internalTypes.InternalSeverity;
 import org.opendaylight.mwtn.base.internalTypes.InventoryInformation;
 import org.opendaylight.mwtn.devicemanager.impl.ProviderClient;
 import org.opendaylight.mwtn.devicemanager.impl.database.service.HtDatabaseEventsService;
-import org.opendaylight.mwtn.devicemanager.impl.listener.MicrowaveEventListener12;
+import org.opendaylight.mwtn.devicemanager.impl.listener.MicrowaveEventListener1211;
 import org.opendaylight.mwtn.devicemanager.impl.xml.ProblemNotificationXml;
 import org.opendaylight.mwtn.devicemanager.impl.xml.WebSocketServiceClient;
 import org.opendaylight.mwtn.performancemanager.impl.database.types.EsHistoricalPerformance15Minutes;
 import org.opendaylight.mwtn.performancemanager.impl.database.types.EsHistoricalPerformance24Hours;
-//import org.opendaylight.yang.gen.v1.uri.onf.microwavemodel.networkelement.currentproblemlist.rev161120.GenericCurrentProblemType;
-//import org.opendaylight.yang.gen.v1.uri.onf.microwavemodel.networkelement.currentproblemlist.rev161120.NetworkElementCurrentProblems;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.ptp.dataset.rev170208.InstanceList;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.ptp.dataset.rev170208.InstanceListKey;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.ptp.dataset.rev170208.PortDsEntry;
@@ -49,45 +46,41 @@ import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.core.model.rev170
 import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.core.model.rev170320.network.element.Ltp;
 import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.g._874._1.model.rev170320.GranularityPeriodType;
 import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.g._874._1.model.rev170320.OtnHistoryDataG;
-import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170324.AirInterfaceCurrentProblemTypeG;
-import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170324.AirInterfaceDiversityCurrentProblemTypeG;
-import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170324.AirInterfaceHistoricalPerformanceTypeG;
-import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170324.ContainerCurrentProblemTypeG;
-import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170324.ContainerHistoricalPerformanceTypeG;
-import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170324.MwAirInterfaceDiversityPac;
-import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170324.MwAirInterfaceDiversityPacKey;
-import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170324.MwAirInterfacePac;
-import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170324.MwAirInterfacePacKey;
-import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170324.MwEthernetContainerPac;
-import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170324.MwEthernetContainerPacKey;
-import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170324.MwHybridMwStructurePac;
-import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170324.MwHybridMwStructurePacKey;
-import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170324.MwPureEthernetStructurePac;
-import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170324.MwPureEthernetStructurePacKey;
-import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170324.MwTdmContainerPac;
-import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170324.MwTdmContainerPacKey;
-import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170324.StructureCurrentProblemTypeG;
-import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170324.mw.air._interface.diversity.pac.AirInterfaceDiversityCurrentProblems;
-import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170324.mw.air._interface.pac.AirInterfaceConfiguration;
-import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170324.mw.air._interface.pac.AirInterfaceCurrentProblems;
-import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170324.mw.air._interface.pac.AirInterfaceHistoricalPerformances;
-import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170324.mw.ethernet.container.pac.EthernetContainerCurrentProblems;
-import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170324.mw.ethernet.container.pac.EthernetContainerHistoricalPerformances;
-import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170324.mw.hybrid.mw.structure.pac.HybridMwStructureCurrentProblems;
-import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170324.mw.pure.ethernet.structure.pac.PureEthernetStructureCurrentProblems;
-import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170324.mw.tdm.container.pac.TdmContainerCurrentProblems;
+import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.AirInterfaceCurrentProblemTypeG;
+import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.AirInterfaceDiversityCurrentProblemTypeG;
+import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.AirInterfaceHistoricalPerformanceTypeG;
+import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.ContainerCurrentProblemTypeG;
+import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.ContainerHistoricalPerformanceTypeG;
+import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.MwAirInterfaceDiversityPac;
+import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.MwAirInterfaceDiversityPacKey;
+import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.MwAirInterfacePac;
+import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.MwAirInterfacePacKey;
+import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.MwEthernetContainerPac;
+import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.MwEthernetContainerPacKey;
+import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.MwHybridMwStructurePac;
+import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.MwHybridMwStructurePacKey;
+import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.MwPureEthernetStructurePac;
+import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.MwPureEthernetStructurePacKey;
+import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.MwTdmContainerPac;
+import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.MwTdmContainerPacKey;
+import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.StructureCurrentProblemTypeG;
+import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.mw.air._interface.diversity.pac.AirInterfaceDiversityCurrentProblems;
+import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.mw.air._interface.pac.AirInterfaceConfiguration;
+import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.mw.air._interface.pac.AirInterfaceCurrentProblems;
+import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.mw.air._interface.pac.AirInterfaceHistoricalPerformances;
+import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.mw.ethernet.container.pac.EthernetContainerCurrentProblems;
+import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.mw.ethernet.container.pac.EthernetContainerHistoricalPerformances;
+import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.mw.hybrid.mw.structure.pac.HybridMwStructureCurrentProblems;
+import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.mw.pure.ethernet.structure.pac.PureEthernetStructureCurrentProblems;
+import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.mw.tdm.container.pac.TdmContainerCurrentProblems;
 import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.onf.core.model.conditional.packages.rev170402.NetworkElementPac;
 import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.onf.core.model.conditional.packages.rev170402.network.element.pac.NetworkElementCurrentProblems;
-//import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.onf.core.model.conditional.packages.rev170402.NetworkElementPac;
-//import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.onf.core.model.conditional.packages.rev170402.network.element.pac.NetworkElementCurrentProblems;
 import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.onf.ethernet.conditional.packages.rev170402.EthernetPac;
 import org.opendaylight.yangtools.concepts.ListenerRegistration;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.opendaylight.yangtools.yang.common.QName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.base.Optional;
 
 /**
  * Get information over NETCONF device according to ONF Coremodel. Read
@@ -104,9 +97,9 @@ import com.google.common.base.Optional;
  * @author herbert
  *
  */
-public class ONFCoreNetworkElement12 extends ONFCoreNetworkElementBase {
+public class ONFCoreNetworkElement1211 extends ONFCoreNetworkElementBase {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ONFCoreNetworkElement12.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ONFCoreNetworkElement1211.class);
 
     private static final List<Extension> EMPTYLTPEXTENSIONLIST = new ArrayList<>();
     // private static final List<Ltp> EMPTYLTPLIST = new ArrayList<>();
@@ -124,7 +117,7 @@ public class ONFCoreNetworkElement12 extends ONFCoreNetworkElementBase {
     // Non specific part. Used by all functions.
     /** interfaceList is used by PM task and should be synchonized */
     private final @Nonnull List<Lp> interfaceList = Collections.synchronizedList(new CopyOnWriteArrayList<>());
-    private final @Nonnull MicrowaveEventListener12 microwaveEventListener;
+    private final @Nonnull MicrowaveEventListener1211 microwaveEventListener;
     private @Nullable NetworkElement optionalNe = null;
 
     // Performance monitoring specific part
@@ -142,8 +135,8 @@ public class ONFCoreNetworkElement12 extends ONFCoreNetworkElementBase {
      * interface that is used for monitoring calls
      */
     private @Nullable InstanceIdentifier<AirInterfaceCurrentProblems> dmAirIfCurrentProblemsIID = null;
-    private final boolean isNetworkElementCurrentProblemsSupporting12;
-    private ListenerRegistration<MicrowaveEventListener12> listenerRegistrationresult;
+    private final boolean isNetworkElementCurrentProblemsSupporting1211;
+    private ListenerRegistration<MicrowaveEventListener1211> listenerRegistrationresult;
 
     /*-----------------------------------------------------------------------------
      * Construction
@@ -165,7 +158,7 @@ public class ONFCoreNetworkElement12 extends ONFCoreNetworkElementBase {
      * @param dcaeProvider
      *            to forward problem / change notifications
      */
-    private ONFCoreNetworkElement12(String mountPointNodeName, Capabilities capabilities,
+    private ONFCoreNetworkElement1211(String mountPointNodeName, Capabilities capabilities,
             DataBroker netconfNodeDataBroker, WebSocketServiceClient webSocketService,
             HtDatabaseEventsService databaseService, ProviderClient dcaeProvider,
             @Nullable ProviderClient aotsmClient) {
@@ -173,10 +166,10 @@ public class ONFCoreNetworkElement12 extends ONFCoreNetworkElementBase {
         super(mountPointNodeName, netconfNodeDataBroker, capabilities);
 
         // Create MicrowaveService here
-        this.microwaveEventListener = new MicrowaveEventListener12(mountPointNodeName, webSocketService,
+        this.microwaveEventListener = new MicrowaveEventListener1211(mountPointNodeName, webSocketService,
                 databaseService, dcaeProvider, aotsmClient);
-        this.isNetworkElementCurrentProblemsSupporting12 = capabilities.isSupportingNamespace(NetworkElementPac.QNAME);
-        LOG.debug("support necurrent-problem-list=" + this.isNetworkElementCurrentProblemsSupporting12);
+        this.isNetworkElementCurrentProblemsSupporting1211 = capabilities.isSupportingNamespace(NetworkElementPac.QNAME);
+        LOG.debug("support necurrent-problem-list=" + this.isNetworkElementCurrentProblemsSupporting1211);
         LOG.info("Create NE instance {}", InstanceList.QNAME.getLocalName());
     }
 
@@ -198,12 +191,12 @@ public class ONFCoreNetworkElement12 extends ONFCoreNetworkElementBase {
      *            to forward problem / change notifications
      * @return created Object if conditions are OK or null if not.
      */
-    public static @Nullable ONFCoreNetworkElement12 build(String mountPointNodeName, Capabilities capabilities,
+    public static @Nullable ONFCoreNetworkElement1211 build(String mountPointNodeName, Capabilities capabilities,
             DataBroker netconfNodeDataBroker, WebSocketServiceClient webSocketService,
             HtDatabaseEventsService databaseService, ProviderClient dcaeProvider,
             @Nullable ProviderClient aotsmClient) {
         return checkType(capabilities)
-                ? new ONFCoreNetworkElement12(mountPointNodeName, capabilities, netconfNodeDataBroker, webSocketService,
+                ? new ONFCoreNetworkElement1211(mountPointNodeName, capabilities, netconfNodeDataBroker, webSocketService,
                         databaseService, dcaeProvider, aotsmClient)
                 : null;
     }
@@ -627,10 +620,10 @@ public class ONFCoreNetworkElement12 extends ONFCoreNetworkElementBase {
 //        }
 
         // Step 2.5: Read other problems from mountpoint
-        if (isNetworkElementCurrentProblemsSupporting12) {
+        if (isNetworkElementCurrentProblemsSupporting1211) {
             idxStart = resultList.size();
-            readNetworkElementCurrentProblems12(resultList);
-            debugResultList("CurrentProblems12", resultList, idxStart);
+            readNetworkElementCurrentProblems1211(resultList);
+            debugResultList("CurrentProblems1211", resultList, idxStart);
         }
 
         return resultList;
@@ -823,12 +816,12 @@ public class ONFCoreNetworkElement12 extends ONFCoreNetworkElementBase {
      * @param lp
      * @return
      */
-    private List<ExtendedAirInterfaceHistoricalPerformanceType12> readTheHistoricalPerformanceDataOfMwAirInterfacePac(
+    private List<ExtendedAirInterfaceHistoricalPerformanceType1211> readTheHistoricalPerformanceDataOfMwAirInterfacePac(
             Lp lp) {
 
         String uuId = lp.getUuid().getValue();
 
-        List<ExtendedAirInterfaceHistoricalPerformanceType12> resultList = new ArrayList<>();
+        List<ExtendedAirInterfaceHistoricalPerformanceType1211> resultList = new ArrayList<>();
         LOG.debug("DBRead Get {} MWAirInterfacePac: {}", mountPointNodeName, uuId);
         // ----
         UniversalId mwAirInterfacePacuuId = new UniversalId(uuId);
@@ -857,14 +850,14 @@ public class ONFCoreNetworkElement12 extends ONFCoreNetworkElementBase {
                         mwAirInterfacePacuuId);
             } else {
                 // org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170320.air._interface.historical.performances.g.HistoricalPerformanceDataList
-                List<org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170324.air._interface.historical.performances.g.HistoricalPerformanceDataList> airHistPMList = airHistoricalPerformanceData
+                List<org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.air._interface.historical.performances.g.HistoricalPerformanceDataList> airHistPMList = airHistoricalPerformanceData
                         .getHistoricalPerformanceDataList();
                 LOG.debug("DBRead MWAirInterfacePac Id {} Records intermediate: {}", mwAirInterfacePacuuId,
                         airHistPMList.size());
                 if (airHistPMList != null) {
                     for (AirInterfaceHistoricalPerformanceTypeG pmRecord : airHistoricalPerformanceData
                             .getHistoricalPerformanceDataList()) {
-                        resultList.add(new ExtendedAirInterfaceHistoricalPerformanceType12(pmRecord, airConfiguration));
+                        resultList.add(new ExtendedAirInterfaceHistoricalPerformanceType1211(pmRecord, airConfiguration));
                     }
                 }
             }
@@ -896,7 +889,7 @@ public class ONFCoreNetworkElement12 extends ONFCoreNetworkElementBase {
         } else {
             // import
             // org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170320.ethernet.container.historical.performances.g.HistoricalPerformanceDataList
-            List<org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170324.ethernet.container.historical.performances.g.HistoricalPerformanceDataList> airHistPMList = ethContainerHistoricalPerformanceData
+            List<org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.ethernet.container.historical.performances.g.HistoricalPerformanceDataList> airHistPMList = ethContainerHistoricalPerformanceData
                     .getHistoricalPerformanceDataList();
             LOG.debug("DBRead {} Id {} Records intermediate: {}", myName, ethContainerPacuuId, airHistPMList.size());
             if (airHistPMList != null) {
@@ -1066,10 +1059,9 @@ public class ONFCoreNetworkElement12 extends ONFCoreNetworkElementBase {
 //    }
 
     /*-----------------------------------------------------------------------------
-     * Reading problems for the networkElement V1.0
+     * Reading problems for the networkElement V1.2.1.1
      */
-
-    private List<ProblemNotificationXml> readNetworkElementCurrentProblems12(List<ProblemNotificationXml> resultList) {
+    private List<ProblemNotificationXml> readNetworkElementCurrentProblems1211(List<ProblemNotificationXml> resultList) {
 
         LOG.info("DBRead Get {} NetworkElementCurrentProblems12", mountPointNodeName);
 
@@ -1099,52 +1091,13 @@ public class ONFCoreNetworkElement12 extends ONFCoreNetworkElementBase {
                 }
             }
         } catch (Exception e) {
-            LOG.warn("DBRead {} NetworkElementCurrentProblems12 not supported. Message '{}' ", mountPointNodeName,
+            LOG.warn("DBRead {} NetworkElementCurrentProblems1211not supported. Message '{}' ", mountPointNodeName,
                     e.getMessage());
         }
         return resultList;
 
     }
 
-    /*-----------------------------------------------------------------------------
-     * Reading problems for the networkElement V1.2.1.1
-     */
-    private List<ProblemNotificationXml> readNetworkElementCurrentProblems1211(List<ProblemNotificationXml> resultList) {
-
-        LOG.info("DBRead Get {} NetworkElementCurrentProblems12", mountPointNodeName);
-
-        InstanceIdentifier<org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.onf.core.model.conditional.packages.rev170402.NetworkElementPac> networkElementCurrentProblemsIID = InstanceIdentifier
-                .builder(
-                        org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.onf.core.model.conditional.packages.rev170402.NetworkElementPac.class)
-                .build();
-
-        // Step 2.3: read to the config data store
-        NetworkElementPac problemPac;
-        NetworkElementCurrentProblems problems;
-        try {
-            problemPac = GenericTransactionUtils.readData(netconfNodeDataBroker, LogicalDatastoreType.OPERATIONAL,
-                    networkElementCurrentProblemsIID);
-            problems = problemPac.getNetworkElementCurrentProblems();
-            if (problems == null) {
-                LOG.debug("DBRead no NetworkElementCurrentProblems1211");
-            } else if (problems.getCurrentProblemList() == null) {
-                LOG.debug("DBRead empty CurrentProblemList1211");
-            } else {
-                for (org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.onf.core.model.conditional.packages.rev170402.network.element.current.problems.g.CurrentProblemList problem : problems
-                        .getCurrentProblemList()) {
-                    resultList.add(new ProblemNotificationXml(mountPointNodeName, problem.getObjectReference(),
-                            problem.getProblemName(), InternalSeverity.valueOf(problem.getProblemSeverity()),
-                            problem.getSequenceNumber().toString(),
-                            InternalDateAndTime.valueOf(problem.getTimeStamp())));
-                }
-            }
-        } catch (Exception e) {
-            LOG.warn("DBRead {} NetworkElementCurrentProblems1211 not supported. Message '{}' ", mountPointNodeName,
-                    e.getMessage());
-        }
-        return resultList;
-
-    }
 
     /*-----------------------------------------------------------------------------
      * Reading problems for specific interface pacs

@@ -80,6 +80,26 @@ public enum InternalSeverity {
         return null;
     }
 
+    /**
+     * convert ONF 1.2.1.1 Severity
+     * @param severity as input
+     * @return String with related output
+     */
+    public static InternalSeverity valueOf(org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.SeverityType severity ) {
+        switch( severity ) {
+            case NonAlarmed:
+                return InternalSeverity.NonAlarmed;
+            case Warning:
+                return InternalSeverity.Warning;
+            case Minor:
+                return InternalSeverity.Minor;
+            case Major:
+                return InternalSeverity.Major;
+            case Critical:
+                return InternalSeverity.Critical;
+        }
+        return null;
+    }
 
 
 }

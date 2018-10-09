@@ -84,7 +84,8 @@ public class EsHistoricalPerformanceBase extends EsObject {
             radioSignalId = ((LinkIdentifyingObject) record).getSignalId();
         }
 
-        performanceData = new EsPerformanceData12( record );
+//        performanceData = new EsPerformanceData12( record );
+        performanceData = new EsPerformanceData(record);
         setEsId(genSpecificEsId(record.getPeriodEndTime().getValue()));
     }
 

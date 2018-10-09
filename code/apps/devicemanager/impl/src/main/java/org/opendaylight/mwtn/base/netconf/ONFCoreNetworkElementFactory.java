@@ -46,8 +46,10 @@ public class ONFCoreNetworkElementFactory {
                         LOG.info("Mountpoint {} capabilities {}",mountPointNodeName, capabilities);
 
 //                        res = ONFCoreNetworkElement10.build(mountPointNodeName, capabilities, mountpointDataBroker, webSocketService, databaseService, dcaeProvider,aotsmClient);
+                        res = ONFCoreNetworkElement12.build(mountPointNodeName, capabilities, mountpointDataBroker, webSocketService, databaseService, dcaeProvider,aotsmClient);
+                        LOG.info("ONFCoreNetworkElementRepresentation value is not null? " + (res != null) );
                         if (res == null) {
-                            res = ONFCoreNetworkElement12.build(mountPointNodeName, capabilities, mountpointDataBroker, webSocketService, databaseService, dcaeProvider,aotsmClient);
+                            res = ONFCoreNetworkElement1211.build(mountPointNodeName, capabilities, mountpointDataBroker, webSocketService, databaseService, dcaeProvider,aotsmClient);
                         }
                     }
                 }

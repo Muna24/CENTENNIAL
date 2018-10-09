@@ -1,30 +1,29 @@
 //package org.opendaylight.mwtn.performancemanager.impl.database.types;
 //
-//import org.opendaylight.mwtn.base.netconf.ExtendedAirInterfaceHistoricalPerformanceType12;
-//import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.g._874._1.model.rev170320.OtnHistoryDataG;
-//import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170324.AirInterfaceHistoricalPerformanceTypeG;
-//import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170324.AirInterfacePerformanceTypeG;
-//import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170324.ContainerHistoricalPerformanceTypeG;
-//import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev170324.ContainerPerformanceTypeG;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
-//
 //import com.fasterxml.jackson.annotation.JsonGetter;
 //import com.fasterxml.jackson.annotation.JsonIgnore;
 //import com.fasterxml.jackson.annotation.JsonInclude;
+//import org.opendaylight.mwtn.base.netconf.ExtendedAirInterfaceHistoricalPerformanceType1211;
+//import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.g._874._1.model.rev170320.OtnHistoryDataG;
+//import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.AirInterfaceHistoricalPerformanceTypeG;
+//import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.AirInterfacePerformanceTypeG;
+//import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.ContainerHistoricalPerformanceTypeG;
+//import org.opendaylight.yang.gen.v1.urn.onf.params.xml.ns.yang.microwave.model.rev180927.ContainerPerformanceTypeG;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 //
 //@JsonInclude(JsonInclude.Include.NON_NULL)
-//public class EsPerformanceData12 {
+//public class EsPerformanceData1211 {
 //
 //    @JsonIgnore
-//    private static final Logger LOG = LoggerFactory.getLogger(EsPerformanceData12.class);
+//    private static final Logger LOG = LoggerFactory.getLogger(EsPerformanceData1211.class);
 //
 //    @JsonIgnore
 //    private AirInterfacePerformanceTypeG dataAirInterface;
 //    @JsonIgnore
 //    private ContainerPerformanceTypeG dataEthContainer;
 //
-//    public <T extends OtnHistoryDataG> EsPerformanceData12(T ff) {
+//    public <T extends OtnHistoryDataG> EsPerformanceData1211(T ff) {
 //
 //        dataAirInterface = null;
 //        dataEthContainer = null;
@@ -33,8 +32,8 @@
 //            this.dataAirInterface = ((AirInterfaceHistoricalPerformanceTypeG)ff).getPerformanceData();
 //        } else if (ff instanceof ContainerHistoricalPerformanceTypeG) {
 //            this.dataEthContainer = ((ContainerHistoricalPerformanceTypeG)ff).getPerformanceData();
-//        } else if (ff instanceof ExtendedAirInterfaceHistoricalPerformanceType12) {
-//            this.dataAirInterface = ((ExtendedAirInterfaceHistoricalPerformanceType12)ff).getAirInterfaceHistoricalPerformanceType().getPerformanceData();
+//        } else if (ff instanceof ExtendedAirInterfaceHistoricalPerformanceType1211) {
+//            this.dataAirInterface = ((ExtendedAirInterfaceHistoricalPerformanceType1211)ff).getAirInterfaceHistoricalPerformanceType().getPerformanceData();
 //        } else {
 //            LOG.warn("Can not assign historical performance type {}", ff.getClass().getName());
 //        }
@@ -74,63 +73,79 @@
 //    @JsonGetter("rx-level-avg")
 //    java.lang.Byte getRxLevelAvg(){ return dataAirInterface != null ? dataAirInterface.getRxLevelAvg() : null; }
 //
+//    @SuppressWarnings("deprecation")
 //    @JsonGetter("time2-states")
 //    java.lang.Integer getTime2States(){ return dataAirInterface != null ? dataAirInterface.getTime2States() : null; }
 //
 //    @JsonGetter("time4-states-s")
 //    java.lang.Integer getTime4StatesS(){ return dataAirInterface != null ? dataAirInterface.getTime4StatesS() : null; }
 //
+//    @SuppressWarnings("deprecation")
 //    @JsonGetter("time4-states")
 //    java.lang.Integer getTime4States(){ return dataAirInterface != null ? dataAirInterface.getTime4States() : null; }
 //
+//    @SuppressWarnings("deprecation")
 //    @JsonGetter("time8-states")
 //    java.lang.Integer getTime8States(){ return dataAirInterface != null ? dataAirInterface.getTime8States() : null; }
 //
+//    @SuppressWarnings("deprecation")
 //    @JsonGetter("time16-states-s")
 //    java.lang.Integer getTime16StatesS(){ return dataAirInterface != null ? dataAirInterface.getTime16StatesS() : null; }
 //
+//    @SuppressWarnings("deprecation")
 //    @JsonGetter("time16-states")
 //    java.lang.Integer getTime16States(){ return dataAirInterface != null ? dataAirInterface.getTime16States() : null; }
 //
+//    @SuppressWarnings("deprecation")
 //    @JsonGetter("time32-states")
 //    java.lang.Integer getTime32States(){ return dataAirInterface != null ? dataAirInterface.getTime32States() : null; }
 //
 //    @JsonGetter("time64-states")
 //    java.lang.Integer getTime64States(){ return dataAirInterface != null ? dataAirInterface.getTime64States() : null; }
 //
+//    @SuppressWarnings("deprecation")
 //    @JsonGetter("time128-states")
 //    java.lang.Integer getTime128States(){ return dataAirInterface != null ? dataAirInterface.getTime128States() : null; }
 //
+//    @SuppressWarnings("deprecation")
 //    @JsonGetter("time256-states")
 //    java.lang.Integer getTime256States(){ return dataAirInterface != null ? dataAirInterface.getTime256States() : null; }
 //
+//    @SuppressWarnings("deprecation")
 //    @JsonGetter("time512-states")
 //    java.lang.Integer getTime512States(){ return dataAirInterface != null ? dataAirInterface.getTime512States() : null; }
 //
+//    @SuppressWarnings("deprecation")
 //    @JsonGetter("time512-states-l")
 //    java.lang.Integer getTime512StatesL(){ return dataAirInterface != null ? dataAirInterface.getTime512StatesL() : null; }
 //
+//    @SuppressWarnings("deprecation")
 //    @JsonGetter("time1024-states")
 //    java.lang.Integer getTime1024States(){ return dataAirInterface != null ? dataAirInterface.getTime1024States() : null; }
 //
 //    @JsonGetter("time1024-states-l")
 //    java.lang.Integer getTime1024StatesL(){ return dataAirInterface != null ? dataAirInterface.getTime1024StatesL() : null; }
 //
+//    @SuppressWarnings("deprecation")
 //    @JsonGetter("time2048-states")
 //    java.lang.Integer getTime2048States(){ return dataAirInterface != null ? dataAirInterface.getTime2048States() : null; }
 //
 //    @JsonGetter("time2048-states-l")
 //    java.lang.Integer getTime2048StatesL(){ return dataAirInterface != null ? dataAirInterface.getTime2048StatesL() : null; }
 //
+//    @SuppressWarnings("deprecation")
 //    @JsonGetter("time4096-states")
 //    java.lang.Integer getTime4096States(){ return dataAirInterface != null ? dataAirInterface.getTime4096States() : null; }
 //
+//    @SuppressWarnings("deprecation")
 //    @JsonGetter("time4096-states-l")
 //    java.lang.Integer getTime4096StatesL(){ return dataAirInterface != null ? dataAirInterface.getTime4096StatesL() : null; }
 //
+//    @SuppressWarnings("deprecation")
 //    @JsonGetter("time8192-states")
 //    java.lang.Integer getTime8192States(){ return dataAirInterface != null ? dataAirInterface.getTime8192States() : null; }
 //
+//    @SuppressWarnings("deprecation")
 //    @JsonGetter("time8192-states-l")
 //    java.lang.Integer getTime8192StatesL(){ return dataAirInterface != null ? dataAirInterface.getTime8192StatesL() : null; }
 //

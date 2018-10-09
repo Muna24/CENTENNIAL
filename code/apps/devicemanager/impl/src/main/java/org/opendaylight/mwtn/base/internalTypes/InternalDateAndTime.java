@@ -48,13 +48,12 @@ public class InternalDateAndTime {
      */
 
     /**
-     * Convert ONF 1.0 DateAndTime to String
+     * Convert ONF 1.2 DateAndTime to String
      * @param time as input
      */
     private InternalDateAndTime(DateAndTime time) {
         internalDateAndTime = NetconfTimeStamp.getTimeStampFromNetconf(time.getValue());
     }
-
 
     /**
      * Convert ONF 1.2 DateAndTime to String
